@@ -9,8 +9,6 @@
 #include <commdlg.h>
 #include <memory>
 
-// Windows.Data.Pdf ABI: Microsoft windows-rs, Windows/Data/Pdf/mod.rs.
-// Uses the system PDF renderer on Windows 10/11, without external runtimes.
 namespace pdfPreview {
 struct Document;
 struct Page : IInspectable {
