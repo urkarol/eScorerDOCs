@@ -50,58 +50,18 @@ Początkowe listy zawierają 54 drużyny z tabeli użytkownika i korzystają ze 
 
 ## Edycja formatów nazw
 
-Kliknij „Format nazw…” nad podglądem. Wybierz „Nazwy dokumentów” albo „Nazwa folderu meczu”.
-
-- Przeciągnij element na inne miejsce na liście. Możesz też użyć „W górę” i „W dół”.
-- Wybierz element i zmień „Separator po wybranym elemencie”. Separatory są przypisane do przerw pomiędzy kolejnymi pozycjami; przesuwanie elementów nie przesuwa separatorów.
-- Możesz użyć np. `_`, `-`, spacji lub pozostawić separator pusty.
-- W polu „Format daty” wybierz gotowy układ albo wpisz własny. Ustawienie jest osobne dla nazw dokumentów i folderu. `yyyy` oznacza czterocyfrowy rok, `yy` dwucyfrowy rok, `MM` i `dd` miesiąc i dzień z zerem na początku, a `M` i `d` bez zera. Każdy składnik musi wystąpić raz. Możesz zmieniać ich kolejność i używać kropek, myślników, podkreśleń, spacji lub zapisu bez separatorów, np. `yyyyMMdd` → `20261009`, `dd.MM.yyyy` → `09.10.2026`.
-- Podgląd aktualizuje się od razu. Gdy dane bieżącego meczu są niekompletne, używany jest przykładowy mecz.
-- „Układ domyślny” przywraca domyślny format aktualnie wybranego typu nazwy.
-- „Zapisz” zachowuje oba formaty. „Anuluj” zamyka edytor bez zastosowania zmian.
-
-Rozszerzenie .pdf jest dodawane automatycznie na końcu dokumentu. Wszystkie elementy pozostają w nazwie, a użytkownik zmienia ich kolejność. Niedozwolone w Windows znaki separatorów są odrzucane. Formaty są zapamiętywane po zamknięciu programu.
-
-## Zmiany w wersji 1.3
-
-Dodano podfoldery meczów i edytor formatów nazw z przeciąganiem, edycją separatorów oraz podglądem. Szerokość i wysokość głównego okna pozostają takie same.
+Dodano możliwość edycji formatów nazw plików. Rozszerzenie .pdf jest dodawane automatycznie na końcu dokumentu. Wszystkie elementy pozostają w nazwie, a użytkownik zmienia ich kolejność. Niedozwolone w Windows znaki separatorów są odrzucane. Formaty są zapamiętywane po zamknięciu programu.
 
 ## Zmiany w wersji 1.4
 
 Dodano edycję formatu daty z gotowymi układami i możliwością wpisania własnego. Osobne ustawienia dla dokumentów i folderu są zapamiętywane. Dotychczas zapisane układy i separatory są zachowane. Wybór daty meczu w głównym oknie nadal pokazuje datę w stałym formacie `yyyy-MM-dd`; format nazw zmienia tylko zapis w folderach i plikach. „Układ domyślny” przywraca również domyślny format daty wybranego typu nazwy.
 
-## Zmiany w wersji 1.2
+## Zmiany w wersji 1.3
 
-Nazwa programu i pliku to eScorerDOCs. Ikona przedstawia dokumenty. Główne okno ma 480 × 536 jednostek przy skalowaniu 100%; rozwijane listy pokazują pełne nazwy zespołów. Dodano edytor listy zespołów.
+Dodano podfoldery meczów i edytor formatów nazw z przeciąganiem, edycją separatorów oraz podglądem. Szerokość i wysokość głównego okna pozostają takie same.
 
-## Źródła i kompilacja
 
-Folder src zawiera kod C++17, zasoby, manifest i testy. Do uruchamiania gotowego EXE kompilator nie jest potrzebny.
-Przykład kompilacji dla Windows za pomocą MinGW-w64, z folderu src:
 
-    windres -i app.rc -O coff -o app.res
-    g++ main.cpp app.res -std=c++17 -Os -s -static -static-libgcc -static-libstdc++ -municode -mwindows -o eScorerDOCs.exe -lcomctl32 -lshell32 -lole32 -ladvapi32 -lgdi32 -luser32 -lruntimeobject -lshcore -lshlwapi -lwindowscodecs -luuid -lcomdlg32
 
-## Weryfikacja
 
-Przeszły testy nazw, filtrowania i zapisu PDF-ów oraz testy zapisu/odczytu danych zespołów, polskich znaków, zmian nazw i kodów, przenoszenia zespołu do innej ligi, dodawania i usuwania zespołów, pustej listy oraz odrzucania nieprawidłowych i powielonych kodów. PDF został sprawdzony parserem i renderowaniem. W wersji 1.3 przeszły także testy wszystkich 720 układów nazw dokumentów, 120 układów nazw folderów, zmiany separatorów, zachowywania formatów, tworzenia podfolderu i ochrony istniejących plików.
-W wersji 1.4 sprawdzono także formaty daty, daty przestępne, różne formaty folderów i dokumentów, zapamiętywanie i migrację ustawień poprzedniej wersji oraz generowanie kompletu w folderze z nowym formatem daty.
-Plik jest skompilowany dla Windows x64 i importuje tylko systemowe biblioteki Windows. Uruchomienie okna aplikacji Windows w tym środowisku nie było możliwe.
 
-## Poprawka 1.3.1
-
-Pole separatora w edytorze formatów nazw jest krótsze, a jego wysokość wynika z wymiarów aktualnie używanej czcionki.
-
-## Wbudowany wzór kartek
-
-`src/lineup_source.pdf` jest wzorem dostarczonym przez użytkownika. `src/build_lineup_template.py` usuwa etykiety i krótkie kreski oraz buduje `lineup_template.pdf` i `lineup_data.hpp`. Przebudowanie wzoru wymaga wyłącznie na etapie przygotowania: Python, PyMuPDF, fontTools i czcionki DejaVu Sans. Kompilacja C++ korzysta z gotowego `lineup_data.hpp` i nie wymaga Pythona. Licencja czcionki jest w DejaVu-LICENSE.txt oraz wewnątrz zasobów EXE.
-
-## Test podglądu pod Windows
-
-`src/test_preview.cpp` jest testem integracyjnym dla Windows 10/11. Sprawdza systemowe renderowanie rzeczywistego PDF i usuwanie plików tymczasowych po zamknięciu uchwytu, zachowując drugi plik. Test został skompilowany, ale nie uruchomiony w środowisku Linux. Przykładowa kompilacja z folderu src:
-
-    g++ test_preview.cpp -std=c++17 -O2 -static -municode -o test_preview.exe -lole32 -lruntimeobject -lshcore -lshlwapi -lwindowscodecs -luuid -lcomdlg32 -lgdi32 -luser32
-
-## Poprawka 1.6.1
-
-Dodano SD i SR do kompletu pustych dokumentów meczowych i do podglądu nazw. Powstaje osiem dokumentów. Oba nowe rodzaje korzystają z ustawionych formatów nazw i daty oraz tego samego folderu meczu. Wymiary okna i obsługa kartek R5 pozostają bez zmian.
