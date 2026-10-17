@@ -1,7 +1,0 @@
-*.sh text eol=lf
-*.yml text eol=lf
-*.cpp text eol=lf
-*.hpp text eol=lf
-*.rc text eol=lf
-*.ico binary
-*.pdf binary
