@@ -1,0 +1,28 @@
+name: macOS – eScorerDOCs
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'scripts/**', '.github/workflows/build-macos.yml', 'DejaVu-LICENSE.txt']
+  pull_request:
+    paths: ['src/**', 'scripts/**', '.github/workflows/build-macos.yml', 'DejaVu-LICENSE.txt']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - name: Testy nazw, list zespołów i PDF
+        run: bash scripts/test-common.sh
+      - name: Budowanie aplikacji dla Apple Silicon
+        run: bash scripts/build-macos.sh arm64
+      - name: Test integracji z macOS i PDFKit
+        run: bash scripts/test-macos.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eScorerDOCs-macOS-M1-M2-M3-M4
+          path: dist/eScorerDOCs-macOS-arm64.zip
+          if-no-files-found: error
+          retention-days: 30
