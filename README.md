@@ -1,6 +1,10 @@
-# eScorerDOCs, wersja 1.6.2
+# Wersja macOS
 
-Dodano pusty dokument **SK-10** do standardowego kompletu PDF (PE, PL, RM1, RM2, VC1, VC2, SD, SR, SK-10). 
+Źródła natywnej aplikacji dla Apple Silicon oraz instrukcja budowania przez
+GitHub Actions znajdują się w [README-macOS.md](README-macOS.md).
+
+# eScorerDOCs, wersja 1.6.1
+
 Program: eScorerDOCs.exe. Jeden plik dla Windows 10/11 x64, bez instalacji i bez dodatkowych bibliotek. 
 
 ## Kartki na ustawienie — wersja 1.6
