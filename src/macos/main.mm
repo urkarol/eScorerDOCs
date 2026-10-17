@@ -9,7 +9,7 @@ static NSString *str(const std::wstring& s) {
     auto utf8=std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(s);
     return [[NSString alloc] initWithBytes:utf8.data() length:utf8.size() encoding:NSUTF8StringEncoding];
 }
-static std::wstring wide(NSString *s) {
+static std::wstring escorerToWide(NSString *s) {
     return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(s.UTF8String ?: "");
 }
 static NSString *message(const std::exception& e) {
@@ -176,7 +176,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
 }
 - (BOOL)applyCurrent {
     auto candidate=draft;NSInteger r=self.list.selectedRow;
-    Team entry{trimmed(wide(self.nameField.stringValue)),codeFromText(wide(self.codeField.stringValue)),(int)self.group.indexOfSelectedItem};
+    Team entry{trimmed(escorerToWide(self.nameField.stringValue)),codeFromText(escorerToWide(self.codeField.stringValue)),(int)self.group.indexOfSelectedItem};
     if(r<0)candidate.push_back(entry);else candidate[r]=entry;
     try{validateTeams(candidate);}catch(const std::exception& e){alert(message(e));return NO;}
     draft=std::move(candidate);[self.list reloadData];
@@ -191,7 +191,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
     if([p runModal]!=NSModalResponseOK)return;
     NSError *error=nil;NSString *text=[NSString stringWithContentsOfURL:p.URL encoding:NSUTF8StringEncoding error:&error];
     if(!text){alert(error.localizedDescription);return;}
-    try{draft=parseTeams(wide(text));[self.list reloadData];[self newTeam:nil];}catch(const std::exception& e){alert(message(e));}
+    try{draft=parseTeams(escorerToWide(text));[self.list reloadData];[self newTeam:nil];}catch(const std::exception& e){alert(message(e));}
 }
 - (void)exportTeams:(id)sender {
     NSSavePanel *p=[NSSavePanel savePanel];p.nameFieldStringValue=@"eScorerDOCs-zespoly.txt";
@@ -202,7 +202,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
     [self.window makeFirstResponder:nil];
     // Save the pending form as well, so an edited name is never silently discarded.
     NSInteger r=self.list.selectedRow;
-    bool pending=r>=0 ? (wide(self.nameField.stringValue)!=draft[r].name || codeFromText(wide(self.codeField.stringValue))!=draft[r].code || self.group.indexOfSelectedItem!=draft[r].group)
+    bool pending=r>=0 ? (escorerToWide(self.nameField.stringValue)!=draft[r].name || codeFromText(escorerToWide(self.codeField.stringValue))!=draft[r].code || self.group.indexOfSelectedItem!=draft[r].group)
                       : (!self.nameField.stringValue.length?false:true);
     if(pending && ![self applyCurrent])return;
     if(!store(@"teams.txt",str(serializeTeams(draft))))return;
@@ -252,7 +252,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
     return c.identifier.integerValue==1 && (size_t)r<[self pattern].separators.size();
 }
 - (void)tableView:(NSTableView *)t setObjectValue:(id)value forTableColumn:(NSTableColumn *)c row:(NSInteger)r {
-    if(c.identifier.integerValue==1 && (size_t)r<[self pattern].separators.size())[self pattern].separators[r]=wide(value);
+    if(c.identifier.integerValue==1 && (size_t)r<[self pattern].separators.size())[self pattern].separators[r]=escorerToWide(value);
     [self updateSample];
 }
 - (id<NSPasteboardWriting>)tableView:(NSTableView *)t pasteboardWriterForRow:(NSInteger)r {
@@ -270,13 +270,13 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
     if(r>from)--r;movePart([self pattern],from,r);[t reloadData];[self updateSample];return YES;
 }
 - (void)updateSample {
-    [self pattern].dateFormat=wide(self.dateFormat.stringValue);
+    [self pattern].dateFormat=escorerToWide(self.dateFormat.stringValue);
     try{self.sample.stringValue=str(renderPattern([self pattern],matchValues(L"2026-10-10",0,L"30",L"BEL",L"GDA"),folderMode));}
     catch(const std::exception& e){self.sample.stringValue=message(e);}
 }
 - (void)controlTextDidChange:(NSNotification *)note {[self updateSample];}
 - (void)changeMode:(id)sender {
-    [self.window makeFirstResponder:nil];[self pattern].dateFormat=wide(self.dateFormat.stringValue);
+    [self.window makeFirstResponder:nil];[self pattern].dateFormat=escorerToWide(self.dateFormat.stringValue);
     folderMode=self.mode.selectedSegment==1;self.dateFormat.stringValue=str([self pattern].dateFormat);[self.list reloadData];[self updateSample];
 }
 - (void)reset:(id)sender {
@@ -312,8 +312,8 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
 @end
 @implementation App
 - (void)applicationDidFinishLaunching:(NSNotification *)note {
-    try{NSString *s=load(@"teams.txt");if(s)teams()=parseTeams(wide(s));}catch(const std::exception& e){alert(@"Nie można odczytać zapisanej listy zespołów. Użyto listy domyślnej.");}
-    try{NSString *s=load(@"formats.txt");if(s)naming()=parseNaming(wide(s));}catch(const std::exception& e){alert(@"Nie można odczytać formatu nazw. Użyto formatu domyślnego.");}
+    try{NSString *s=load(@"teams.txt");if(s)teams()=parseTeams(escorerToWide(s));}catch(const std::exception& e){alert(@"Nie można odczytać zapisanej listy zespołów. Użyto listy domyślnej.");}
+    try{NSString *s=load(@"formats.txt");if(s)naming()=parseNaming(escorerToWide(s));}catch(const std::exception& e){alert(@"Nie można odczytać formatu nazw. Użyto formatu domyślnego.");}
     self.previews=[NSMutableArray new];self.mainWindow=window(@"eScorerDOCs",480,536,NO);self.mainWindow.delegate=self;
     NSView *v=self.mainWindow.contentView;
     label(v,@"Data meczu",16,10,160);
@@ -349,10 +349,10 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
 }
 - (std::wstring)dateText {
     NSDateFormatter *f=[NSDateFormatter new];f.locale=[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    f.calendar=[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];f.dateFormat=@"yyyy-MM-dd";return wide([f stringFromDate:self.date.dateValue]);
+    f.calendar=[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];f.dateFormat=@"yyyy-MM-dd";return escorerToWide([f stringFromDate:self.date.dateValue]);
 }
-- (std::wstring)homeCode {return wide(self.home.selectedItem.representedObject);}
-- (std::wstring)awayCode {return wide(self.away.selectedItem.representedObject);}
+- (std::wstring)homeCode {return escorerToWide(self.home.selectedItem.representedObject);}
+- (std::wstring)awayCode {return escorerToWide(self.away.selectedItem.representedObject);}
 - (void)fillTeams {
     NSString *h=self.home.selectedItem.representedObject,*a=self.away.selectedItem.representedObject;
     for(NSPopUpButton *p in @[self.home,self.away]) {
@@ -370,7 +370,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
 }
 - (void)refresh:(id)sender {
     try {
-        auto number=wide(self.number.stringValue);std::wstring text;
+        auto number=escorerToWide(self.number.stringValue);std::wstring text;
         if(trimmed(number).empty()) {
             auto files=lineupFilenames([self homeCode],[self awayCode]);
             text=L"Kartki na ustawienie:\n"+files[0]+L"\n"+files[1]+L"\n\nBez numeru meczu: podglądy tymczasowe.";
@@ -396,7 +396,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
     NSString *target=self.folder.stringValue;
     if(!target.length){alert(@"Wybierz folder zapisu.");return;}
     try {
-        NSString *sub=str(matchFolder([self dateText],(int)self.league.indexOfSelectedItem,wide(self.number.stringValue),[self homeCode],[self awayCode]));
+        NSString *sub=str(matchFolder([self dateText],(int)self.league.indexOfSelectedItem,escorerToWide(self.number.stringValue),[self homeCode],[self awayCode]));
         NSString *candidate=[target stringByAppendingPathComponent:sub];BOOL directory=NO;
         if([NSFileManager.defaultManager fileExistsAtPath:candidate isDirectory:&directory]&&directory)target=candidate;
     }catch(...){}
@@ -405,25 +405,25 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
 - (void)generate:(id)sender {
     [self.mainWindow makeFirstResponder:nil];
     try {
-        auto files=formattedFilenames([self dateText],(int)self.league.indexOfSelectedItem,wide(self.number.stringValue),[self homeCode],[self awayCode]);
-        auto sub=matchFolder([self dateText],(int)self.league.indexOfSelectedItem,wide(self.number.stringValue),[self homeCode],[self awayCode]);std::wstring error;
-        if(!writeMatchBatch(wide(self.folder.stringValue),sub,files,error)){alert(str(error));return;}
+        auto files=formattedFilenames([self dateText],(int)self.league.indexOfSelectedItem,escorerToWide(self.number.stringValue),[self homeCode],[self awayCode]);
+        auto sub=matchFolder([self dateText],(int)self.league.indexOfSelectedItem,escorerToWide(self.number.stringValue),[self homeCode],[self awayCode]);std::wstring error;
+        if(!writeMatchBatch(escorerToWide(self.folder.stringValue),sub,files,error)){alert(str(error));return;}
         [self persist];self.status.stringValue=@"Pliki zapisane w folderze meczu.";
     }catch(const std::exception& e){alert(message(e));}
 }
 - (void)generateLineups:(id)sender {
     [self.mainWindow makeFirstResponder:nil];NSString *temp=nil;
     try {
-        auto plan=planLineups([self dateText],(int)self.league.indexOfSelectedItem,wide(self.number.stringValue),[self homeCode],[self awayCode]);
+        auto plan=planLineups([self dateText],(int)self.league.indexOfSelectedItem,escorerToWide(self.number.stringValue),[self homeCode],[self awayCode]);
         auto pdfs=std::vector<std::string>{lineupPdf([self homeCode]),lineupPdf([self awayCode])};std::wstring error,target;
         if(plan.temporary) {
             temp=[NSTemporaryDirectory() stringByAppendingPathComponent:[@"eScorerDOCs-" stringByAppendingString:NSUUID.UUID.UUIDString]];
             NSError *err=nil;
             if(![NSFileManager.defaultManager createDirectoryAtPath:temp withIntermediateDirectories:NO attributes:@{NSFilePosixPermissions:@0700} error:&err]){alert(err.localizedDescription);return;}
-            target=wide(temp);
+            target=escorerToWide(temp);
             if(!writeBatchContents(target,plan.files,pdfs,error)){[NSFileManager.defaultManager removeItemAtPath:temp error:NULL];alert(str(error));return;}
         }else {
-            auto base=wide(self.folder.stringValue);
+            auto base=escorerToWide(self.folder.stringValue);
             if(!writeMatchBatchContents(base,plan.folder,plan.files,pdfs,error)){alert(str(error));return;}target=join(base,plan.folder);
         }
         __weak App *weak=self;

@@ -11,7 +11,7 @@ static void selectCode(NSPopUpButton *p,NSString *code) {
 int main() {
     @autoreleasepool {
         [NSApplication sharedApplication];[NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
-        assert(wide(str(L"Zażółć gęślą jaźń 🏐"))==L"Zażółć gęślą jaźń 🏐");
+        assert(escorerToWide(str(L"Zażółć gęślą jaźń 🏐"))==L"Zażółć gęślą jaźń 🏐");
         naming()=defaultNaming();teams()=defaultTeams();
         App *app=[App new];[app applicationDidFinishLaunching:nil];
         assert(app.mainWindow.contentView.frame.size.width==480);
@@ -28,7 +28,7 @@ int main() {
         [app generate:nil];
         auto folder=matchFolder([app dateText],0,L"30",L"BEL",L"GDA");
         for(const auto& file:formattedFilenames([app dateText],0,L"30",L"BEL",L"GDA")) {
-            PDFDocument *p=[[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:str(join(join(wide(base),folder),file))]];
+            PDFDocument *p=[[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:str(join(join(escorerToWide(base),folder),file))]];
             assert(p.pageCount==1);assert(p.string.length==0);
         }
         // Empty match number must work even without an output directory.
