@@ -114,7 +114,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
 }
 - (void)printDocument:(id)sender {
     NSPrintInfo *info=[NSPrintInfo.sharedPrintInfo copy];
-    info.paperSize=NSMakeSize(595.275591,841.889764); info.orientation=NSLandscapeOrientation;
+    info.paperSize=NSMakeSize(595.275591,841.889764); info.orientation=NSPaperOrientationLandscape;
     info.topMargin=0;info.bottomMargin=0;info.leftMargin=0;info.rightMargin=0;
     NSPrintOperation *operation=[self.pdf.document printOperationForPrintInfo:info scalingMode:kPDFPrintPageScaleDownToFit autoRotate:YES];
     if(operation)[operation runOperation];
@@ -318,7 +318,7 @@ static NSTableView *table(NSView *v,CGFloat x,CGFloat y,CGFloat w,CGFloat h,NSAr
     NSView *v=self.mainWindow.contentView;
     label(v,@"Data meczu",16,10,160);
     self.date=[[NSDatePicker alloc] initWithFrame:NSMakeRect(16,31,155,26)];
-    self.date.datePickerStyle=NSTextFieldAndStepperDatePickerStyle;self.date.datePickerElements=NSYearMonthDayDatePickerElementFlag;
+    self.date.datePickerStyle=NSDatePickerStyleTextFieldAndStepper;self.date.datePickerElements=NSDatePickerElementFlagYearMonthDay;
     self.date.dateValue=[NSDate date];self.date.target=self;self.date.action=@selector(refresh:);[v addSubview:self.date];
     button(v,@"Dzisiaj",179,31,70,26,self,@selector(today:));label(v,@"Numer meczu",290,10,174);
     self.number=field(v,@"",290,31,174,26);self.number.delegate=self;

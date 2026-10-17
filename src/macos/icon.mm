@@ -19,7 +19,7 @@ int main(int argc,char **argv) {
             [[NSColor colorWithSRGBRed:0.80 green:0.89 blue:0.98 alpha:1] setFill];NSBezierPath *fold=[NSBezierPath bezierPath];
             [fold moveToPoint:NSMakePoint(663,880)];[fold lineToPoint:NSMakePoint(663,734)];[fold lineToPoint:NSMakePoint(809,734)];[fold closePath];[fold fill];
             [[NSColor colorWithSRGBRed:0.10 green:0.22 blue:0.38 alpha:1] setStroke];
-            for(int y : {625,505,385}){NSBezierPath *line=[NSBezierPath bezierPath];line.lineWidth=35;line.lineCapStyle=NSRoundLineCapStyle;[line moveToPoint:NSMakePoint(399,y)];[line lineToPoint:NSMakePoint(729,y)];[line stroke];}
+            for(int y : {625,505,385}){NSBezierPath *line=[NSBezierPath bezierPath];line.lineWidth=35;line.lineCapStyle=NSLineCapStyleRound;[line moveToPoint:NSMakePoint(399,y)];[line lineToPoint:NSMakePoint(729,y)];[line stroke];}
             [NSGraphicsContext restoreGraphicsState];NSData *png=[rep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
             NSString *name=[NSString stringWithFormat:@"render-%d.png",size];if(![png writeToFile:[dir stringByAppendingPathComponent:name] atomically:YES])return 2;
         }
