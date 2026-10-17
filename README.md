@@ -1,4 +1,6 @@
-# eScorerDOCs, wersja 1.6.1
+# eScorerDOCs, wersja 1.6.2
+
+Dodano pusty dokument **SK-10** do standardowego kompletu PDF (PE, PL, RM1, RM2, VC1, VC2, SD, SR, SK-10). Instrukcja budowania na GitHubie: [README-GitHub-Windows.md](README-GitHub-Windows.md).
 
 Program: eScorerDOCs.exe. Jeden plik dla Windows 10/11 x64, bez instalacji i bez dodatkowych bibliotek. 
 

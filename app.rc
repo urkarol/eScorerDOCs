@@ -1,0 +1,75 @@
+#pragma code_page(65001)
+#include <windows.h>
+101 ICON "app.ico"
+102 ICON "lineup.ico"
+104 ICON "swap.ico"
+105 ICON "folder.ico"
+103 RCDATA "../DejaVu-LICENSE.txt"
+1 RT_MANIFEST "app.manifest"
+1 VERSIONINFO
+FILEVERSION 1,6,2,0
+PRODUCTVERSION 1,6,2,0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+BLOCK "StringFileInfo"
+BEGIN
+BLOCK "041504B0"
+BEGIN
+VALUE "FileDescription", "eScorerDOCs - dokumenty meczowe\0"
+VALUE "FileVersion", "1.6.2\0"
+VALUE "ProductName", "eScorerDOCs\0"
+VALUE "ProductVersion", "1.6.2\0"
+END
+END
+BLOCK "VarFileInfo"
+BEGIN
+VALUE "Translation", 0x0415, 1200
+END
+END
+
+201 DIALOGEX 0, 0, 304, 304
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "eScorerDOCs — zespoły"
+FONT 9, "Segoe UI"
+BEGIN
+    LTEXT "Lista zespołów w lidze", -1, 10, 9, 284, 12
+    COMBOBOX 201, 10, 24, 284, 150, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LISTBOX 202, 10, 46, 284, 114, LBS_NOTIFY | WS_VSCROLL | WS_TABSTOP | WS_BORDER
+    LTEXT "Nazwa drużyny", -1, 10, 171, 284, 12
+    EDITTEXT 203, 10, 186, 284, 16, ES_AUTOHSCROLL | WS_TABSTOP
+    LTEXT "Skrót PLS", -1, 10, 212, 54, 12
+    EDITTEXT 204, 10, 227, 54, 16, ES_UPPERCASE | ES_AUTOHSCROLL | WS_TABSTOP
+    LTEXT "Liga drużyny", -1, 75, 212, 219, 12
+    COMBOBOX 205, 75, 227, 219, 150, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON "Nowy zespół", 206, 10, 253, 75, 19
+    DEFPUSHBUTTON "Zapisz zespół", 207, 92, 253, 78, 19
+    PUSHBUTTON "Usuń", 208, 177, 253, 48, 19
+    PUSHBUTTON "Zamknij", IDCANCEL, 232, 253, 62, 19
+    LTEXT "Zmiany zapisuj przyciskiem „Zapisz zespół”.", 209, 10, 280, 284, 19
+END
+
+301 DIALOGEX 0, 0, 326, 366
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "eScorerDOCs — format nazw"
+FONT 9, "Segoe UI"
+BEGIN
+    LTEXT "Edytowany format", -1, 10, 9, 306, 12
+    COMBOBOX 301, 10, 24, 306, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT "Przeciągnij element w inne miejsce lub użyj przycisków.", -1, 10, 47, 306, 15
+    LISTBOX 302, 10, 67, 306, 93, LBS_NOTIFY | WS_VSCROLL | WS_TABSTOP | WS_BORDER
+    PUSHBUTTON "W górę", 303, 10, 167, 65, 19
+    PUSHBUTTON "W dół", 304, 82, 167, 65, 19
+    PUSHBUTTON "Układ domyślny", 306, 221, 167, 95, 19
+    LTEXT "Separator po wybranym elemencie", -1, 10, 198, 190, 12
+    EDITTEXT 305, 252, 195, 64, 14, ES_AUTOHSCROLL | WS_TABSTOP
+    LTEXT "Puste pole łączy elementy bez separatora.", -1, 10, 218, 306, 12
+    LTEXT "Format daty", -1, 10, 239, 65, 12
+    COMBOBOX 311, 82, 236, 234, 120, CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT "Wybierz lub wpisz: yyyy = rok, MM = miesiąc, dd = dzień.", -1, 10, 261, 306, 18
+    LTEXT "Podgląd", -1, 10, 285, 306, 12
+    EDITTEXT 307, 10, 300, 306, 18, ES_READONLY | ES_AUTOHSCROLL
+    LTEXT "", 310, 10, 322, 306, 18
+    DEFPUSHBUTTON "Zapisz", IDOK, 179, 342, 65, 19
+    PUSHBUTTON "Anuluj", IDCANCEL, 251, 342, 65, 19
+END

@@ -1,0 +1,40 @@
+name: Windows – eScorerDOCs
+on:
+  push:
+    branches: [main, master]
+    paths: ['src/**', 'scripts/**', '.github/workflows/build-windows.yml', 'DejaVu-LICENSE.txt']
+  pull_request:
+    paths: ['src/**', 'scripts/**', '.github/workflows/build-windows.yml', 'DejaVu-LICENSE.txt']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
+      - name: Testy nazw, dat, zespołów i SK-10
+        run: bash scripts/test-common.sh
+      - name: Budowanie jednego pliku EXE
+        run: bash scripts/build-windows.sh
+      - name: Testy integracyjne Windows
+        run: bash scripts/test-windows.sh
+      - name: Suma SHA-256
+        run: cd dist && sha256sum eScorerDOCs.exe > SHA256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eScorerDOCs-Windows-x64
+          path: |
+            dist/eScorerDOCs.exe
+            dist/SHA256.txt
+          if-no-files-found: error
+          retention-days: 90
